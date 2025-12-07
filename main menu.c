@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 enum title{
 	E,
@@ -10,12 +12,114 @@ enum title{
 	MONARCH
 };
 
-void DailyQuest(){
+char *titleNames[] = {
+    "E",
+    "D",
+    "C",
+    "B",
+    "A",
+    "S",
+    "MONARCH"
+    
+enum bmi_category {
+    UNDERWEIGHT,
+    NORMAL_WEIGHT,
+    OVERWEIGHT,
+    OBESE_1,
+    OBESE_2,
+    OBESE_3
+};
+float calculateBMI(float height, float weight) {
+}//aya
+
+char *bmiCategoryNames[] = {
+    "Underweight",
+    "Normal Weight",
+    "Overweight",
+    "Obese (Type 1)",
+    "Obese (Type 2)",
+    "Obese (Type 3)"
+};
+typedef enum {
+    PUSH_UP,
+    SQUAT,
+    PLANK
+} WorkoutType;
+
+char *workoutNames[] = {
+    "Push-Up",
+    "Squat",
+    "Plank"
+};// tolong ditambahkan siapapun, gadiza deh sekalian
+
+typedef struct {
+    const char *name;
+    WorkoutType type;
+    int targetAmount;   // reps atau detik
+    int expReward;
+    const char *description;
+    int completed;      // 0 = belum, 1 = sudah
+} Quest;
+
+enum bmi_category getBMICategory(float bmi) {
+    if (bmi < 18.5f) return UNDERWEIGHT;
+    
+}// shan
+
+enum title updateRankByLevel(int level, enum title current) {
+	
+}//farrel
+
+void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
+    int rankIndex = (int)rank;      // E=0, D=1, C=2, ...
+    int rankBonus = rankIndex * 2;  // tiap naik rank +2 reps/detik
+
+    if (bmiCat == UNDERWEIGHT) {
+    	dailyQuests[0].name = "Fundamental Push-Ups";
+        dailyQuests[0].type = PUSH_UP;
+        dailyQuests[0].targetAmount = 8 + level + rankBonus;
+        dailyQuests[0].expReward = 15 + level * 5;
+        dailyQuests[0].description = "Push-up ringan untuk massa otot pemula.";
+        dailyQuests[0].completed = 0;
+    } else if (bmiCat == NORMAL_WEIGHT) {
+    } else if (bmiCat == OVERWEIGHT) {
+	} else {
+        // Semua obese sama
+}
+
+void showDailyQuests() {
 	
 	printf("DAILY QUEST-TRAIN TO BECOME A FORMIDABLE COMBATANT\n");
 	printf("--------------GOALS")
 	
-}
+}//shan
+
+void showStatus(char hunter[],
+                enum title rank,
+                int level,
+                float exp,
+                float maxExp,
+                float height,
+                float weight,
+                float bmi,
+                enum bmi_category bmiCat,
+                int day) {
+}//varo
+
+void attemptMultiQuest(int *level,
+                       float *exp,
+                       float *maxExp,
+                       enum title *rank) {
+                       	
+}//farrel
+
+void updateWeight(float *weight,
+                  float height,
+                  float *bmi,
+                  enum bmi_category *bmiCat,
+                  int level,
+                  enum title rank) {
+}//farrel
 
 int main(){
 	
