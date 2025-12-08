@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
-enum title{
+typedef enum title{
 	E,
 	D,
 	C,
@@ -10,7 +11,7 @@ enum title{
 	A,
 	S,
 	MONARCH
-};
+}rank;
 
 char *titleNames[] = {
     "E",
@@ -19,7 +20,7 @@ char *titleNames[] = {
     "B",
     "A",
     "S",
-    "MONARCH"
+    "MONARCH"};
     
 enum bmi_category {
     UNDERWEIGHT,
@@ -90,9 +91,40 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
 void showDailyQuests() {
 	
 	printf("DAILY QUEST-TRAIN TO BECOME A FORMIDABLE COMBATANT\n");
-	printf("--------------GOALS")
+	printf("-----------------------GOALS-----------------------\n\n");
+	printf("1.[] ");
+	printf("2.[] ");
+	printf("3.[] ");
+	printf("4.[] ");
+	printf("5.[] ");
+	
 	
 }//shan
+
+void printStatus(int day,
+				char hunter[],
+				int level,
+                enum title rank,
+                int level,
+                float exp,
+                float maxExp,
+                float bmi,
+                enum bmi_category bmiCat,
+                int day){
+	
+	printf("==========================================\n");
+	printf("              HUNTER STATUS\n");
+	printf("==========================================\n");
+	printf("DAY           :%s\n",day);
+	printf("NAME          :%s\n",hunter);
+	printf("LEVEL         :%f\n ",level);
+	printf("EXP           :%d/%d\n ",exp,maxExp);
+	printf("BMI           :%f\n ",bmi);
+	printf("BMI CATEGORY  :%f\n ",bmiCat)
+	printf("RANK          :%f\n ",rank);
+	printf("------------------------------------------\n");
+	
+};
 
 void showStatus(char hunter[],
                 enum title rank,
@@ -104,7 +136,7 @@ void showStatus(char hunter[],
                 float bmi,
                 enum bmi_category bmiCat,
                 int day) {
-}//varo
+};//varo
 
 void attemptMultiQuest(int *level,
                        float *exp,
@@ -124,30 +156,77 @@ void updateWeight(float *weight,
 int main(){
 	
 	char hunter[50];
-	int choice;
+	int age;
+	float weight,height;
 	int level=0;
 	float exp=0;
-	char somatotype[50];
+	char bmi[50];
+	int choice;
 	
+	printf("Hello Hunter Enter Your Name: ");
+	scanf("%49[^\n]", hunter); 
+	printf("\nWhat is your age?: ");
+	scanf("%d",&age);
+	printf("\nWhat is your weight: ");
+	scanf("%f",&weight);
+	printf("\nWhat is your height: ");
+	scanf("%f",&height);
+	printf("\n[ READING HUNTER DATA ]\n\n");
+	sleep(2);
+		
+	printf("[>         ] 10%\n");
+	sleep(1);
+	printf("[==>       ] 30%\n");
+	sleep(1);
+	printf("[====>     ] 50%\n");
+	sleep(1);
+	printf("[======>   ] 70%\n");
+	sleep(1);
+	printf("[========> ] 90%\n");
+	sleep(1);
+	printf("[==========] 100%\n");
+	sleep(2);
+	printf(">>> SYSTEM MESSAGE <<<\n");
+	printf("[ USER VERIFIED ]\n\n");
+
+	sleep(3);
 	
-	printf("Hello Hunter Enter Your Name: \n");
-	scanf("%[^\\n]%*c", &hunter); 
-	printf("What is your Somatotype: \n");
-	printf("")
-	printf("Hello %s Do you have any health restrictions (yes=1/no=2): \n",hunter);
+	do{
+	 
+	printf("WELCOME HUNTER %s TO THE SYSTEM!\n",hunter);
+	printf(">>>>>>>>>THIS IS DAY %d<<<<<<<<<\n\n",day);
+	
+	printf("+----------------------------------------------+\n");
+	printf("|                      MENU                    |\n");
+	printf("+----------------------------------------------+\n");
+	printf("| 1.HUNTER STATUS                              |\n");
+	printf("| 2.DAILY QUESTS                               |\n");
+	printf("| 3.QUESTS                                     |\n");
+	printf("| 4.UPDATE WEIGHT                              |\n");
+	printf("| 5.CONTINUE TO NEXT DAY                       |\n");
+	printf("| 6.EXIT PROGRAM                               |\n");
+	printf("+----------------------------------------------+\n");
+	printf("\n");
+	printf("CHOOSE YOUR ACTION (1-6): ");
 	scanf("%d",&choice);
 	
-	printf("Welcome Hunter %s to the System!",hunter);
+	if (choice ==1){
+		
+		
+	};
 	
-	printf("================ STATUS ================\n");
-	printf("----------------------------------------\n");
-	printf("Name      : %s      |Title      : %d\n",hunter,title);
-	printf("Level     : %d      |EXP        : %f\n",level,exp);
-	printf("Strength  : %f      |Endurance  : %f\n");
-	printf("Balance   : %f      |Flexibility: %f \n");
-	printf("Somatotype: %s      |Mobility   : %f\n");
+	printf("[WHAT ACTION WOULD YOU LIKE TO DO?]\n");
+	printf("| 1.HUNTER STATUS                              |\n");
+	printf("| 2.DAILY QUESTS                               |\n");
+	printf("| 3.QUESTS                                     |\n");
+	printf("| 4.UPDATE WEIGHT                              |\n");
+	printf("| 5.CONTINUE TO NEXT DAY                       |\n");
+	printf("| 6.EXIT PROGRAM                               |\n");
+	printf("------------------------------------------\n");
 	
-	printf("         QUEST INFO\n");
+	}while(choice!=4);
+	
+
 	
 	
 	
