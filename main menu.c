@@ -316,7 +316,7 @@ void attemptDailyQuest(int *level,
 	printf("[ SYSTEM GENERATING DAILY QUESTS ]\n\n");
 	sleep (1);
 	
-	print("INITIALIZING...\n\n");
+	printf("INITIALIZING...\n\n");
 	sleep(2);
 
     printf("DAILY QUEST - TRAIN TO BECOME A FORMIDABLE COMBATANT\n");
