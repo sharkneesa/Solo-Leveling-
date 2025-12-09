@@ -65,7 +65,11 @@ typedef struct {
 
 enum bmi_category getBMICategory(float bmi) {
     if (bmi < 18.5f) return UNDERWEIGHT;
-    
+	else if (bmi < 25.0f) return NORMAL_WEIGHT;
+    else if (bmi < 30.0f) return OVERWEIGHT;
+    else if (bmi < 35.0f) return OBESE_1;
+    else if (bmi < 40.0f) return OBESE_2;
+    else return OBESE_3;    
 }// shan
 
 enum title updateRankByLevel(int level, enum title current) {
