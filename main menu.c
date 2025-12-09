@@ -1,4 +1,4 @@
-	#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -50,8 +50,11 @@ typedef enum {
     CYCLING,
     CHAIR_SQUAT,
     WALL_PUSHUP,
-    LUNGES,
-    BICYCLE_CRUNCH
+    LUNGE,
+    BICYCLE_CRUNCH,
+    JOGGING,
+    WALK,
+    BURPEE
 } WorkoutType;
 
 char *workoutNames[] = {
@@ -103,17 +106,90 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
     int rankBonus = rankIndex * 2;  // tiap naik rank +2 reps/detik
 
     if (bmiCat == UNDERWEIGHT) {
-    	dailyQuests[0].name = "Fundamental Push-Ups";
-        dailyQuests[0].type = PUSH_UP;
-        dailyQuests[0].targetAmount = 8 + level + rankBonus;
-        dailyQuests[0].expReward = 15 + level * 5;
-        dailyQuests[0].description = "Push-up ringan untuk massa otot pemula.";
+    	dailyQuests[0].name = "Lower Body Mass Builder";
+        dailyQuests[0].type = SQUAT;
+        dailyQuests[0].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[0].expReward = 15 + level * 5; 
+        dailyQuests[0].completed = 0; 
+        dailyQuests[0].description = "Focused squats to increase lower body muscle mass.";
+
+        dailyQuests[1].name = "Effective Cycling Workout";
+        dailyQuests[1].type = CYCLING;
+        dailyQuests[1].targetAmount = 30 + level * 5 + rankBonus; // minutes
+        dailyQuests[1].expReward = 10 + level * 4; 
+        dailyQuests[1].completed = 0;
+        dailyQuests[1].description = "Blend endurance, speed, and stamina, for core stability.";
+
+        dailyQuests[2].name = "Cardio Session";
+        dailyQuests[2].type = JOGGING;
+        dailyQuests[2].targetAmount = 30 + level * 5 + rankBonus; // minutes
+        dailyQuests[2].expReward = 25 + level * 7; 
+        dailyQuests[2].completed = 0;
+        dailyQuests[2].description = "Moderate to intense long jogs.";
+
+        dailyQuests[3].name = "Daily Supplemental Movement";
+        dailyQuests[3].type = BURPEE;
+        dailyQuests[3].targetAmount = 15 + level * 5 + rankBonus; // how maby times
+        dailyQuests[3].expReward = 25 + level * 7; 
+        dailyQuests[3].completed = 0;
+        dailyQuests[3].description = "High-intensity burpees for explosive stamina";
+    } else if (bmiCat == NORMAL_WEIGHT) {
+        dailyQuests[0].name = "Endurance Run Challenge";
+        dailyQuests[0].type = RUNNING;
+        dailyQuests[0].targetAmount = 10 + level + rankBonus; // minutes
+        dailyQuests[0].expReward = 15 + level * 5; 
+        dailyQuests[0].completed = 0; 
+        dailyQuests[0].description = "Test your stamina with a standard endurance run.";
+
+        dailyQuests[1].name = "Core Endurance Hold";
+        dailyQuests[1].type = PLANK;
+        dailyQuests[1].targetAmount = 75 + level * 5 + rankBonus; // seconds
+        dailyQuests[1].expReward = 10 + level * 4; 
+        dailyQuests[1].completed = 0;
+        dailyQuests[1].description = "Standard core hold to increase endurance.";
+
+        dailyQuests[2].name = "Daily Supplemental Movement";
+        dailyQuests[2].type = BURPEE; // higher intensity for fitter category
+        dailyQuests[2].targetAmount = 20 + level * 5 + rankBonus; // how many times
+        dailyQuests[2].expReward = 25 + level * 7; 
+        dailyQuests[2].completed = 0;
+        dailyQuests[2].description = "High-intensity burpees for explosive stamina.";
+
+        dailyQuests[3].name = "Supported Lunges (Holding a chair/wall)";
+        dailyQuests[3].type = LUNGE;
+        dailyQuests[3].targetAmount = 30 + level * 5 + rankBonus; // 
+        dailyQuests[3].expReward = 25 + level * 7; 
+        dailyQuests[3].completed = 0;
+        dailyQuests[3].description = "Focus on core to build up full-range lunges";
+    } else if (bmiCat == OVERWEIGHT) {
+        dailyQuests[0].name = "Moderate Push-Ups";
+        dailyQuests[0].type = PUSH_UP; 
+        dailyQuests[0].targetAmount = 10 + level + rankBonus;
+        dailyQuests[0].expReward = 15 + level * 5; 
+        dailyQuests[0].description = "Moderate push-ups to build supporting strength.";
         dailyQuests[0].completed = 0;
-    };
-	else if (bmiCat == NORMAL_WEIGHT) {
-    } ;
-	else if (bmiCat == OVERWEIGHT) {
-	} ;
+
+        dailyQuests[1].name = "Low-Joint Exercise";
+        dailyQuests[1].type = LUNGE;
+        dailyQuests[1].targetAmount = 30 + level * 5 + rankBonus; // how many times
+        dailyQuests[1].expReward = 10 + level * 4; 
+        dailyQuests[1].description = "Focus on core to build up full-range lunges.";
+        dailyQuests[1].completed = 0;
+
+        dailyQuests[2].name = "Freestyle Swimming";
+        dailyQuests[2].type = SWIMMING;
+        dailyQuests[2].targetAmount = 10 + level * 5 + rankBonus; // laps
+        dailyQuests[2].expReward = 25 + level * 7; 
+        dailyQuests[2].description = "Ideal calorie burn.";
+        dailyQuests[2].completed = 0;
+
+        dailyQuests[3].name = "Effective Cycling Workout";
+        dailyQuests[3].type = CYCLING;
+        dailyQuests[3].targetAmount = 30 + level * 5 + rankBonus; // minutes
+        dailyQuests[3].expReward = 25 + level * 7; 
+        dailyQuests[3].completed = 0;
+        dailyQuests[3].description = "Blend endurance, speed, and stamina, for core stability";
+	} // gadiza
 	else {
 
 		dailyQuests[0].name = "Swimming/Water Aerobics";
@@ -145,7 +221,7 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
         dailyQuests[3].completed = 0;
         
         dailyQuests[4].name = "Lunges";
-        dailyQuests[4].type = LUNGES;
+        dailyQuests[4].type = LUNGE;
         dailyQuests[4].targetAmount = 15 + level + rankBonus; 
         dailyQuests[4].expReward = 10 + level * 5;
         dailyQuests[4].description = "Low physically heavy exercise to ensure joint free pain!";
