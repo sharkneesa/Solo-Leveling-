@@ -13,9 +13,21 @@ Basic Programming Final Project which implements "The System" from the manhwa So
 
 ᯓ★ PROGRAM FLOW
 
-❤︎ First the user will insert some information about themselves, such as Name, Somatotype, and Health Restrictions (might add a quiz idk).
+❤︎ First the user will insert some information about themselves, such as Name, Height, Weight, Age, in which the program will use to calculate the user's BMI and check whether or not they're in a suitable age range to do the program.
 
-❤︎ After that they'll enter the Main Game Menu where they can access information including their name, level, stats, daily quest, and other choices such as whether they want to try a certain quest which depends on their data and somatotype or if they want to exit the program.
+❤︎ After that they'll enter the Main Game Menu where they can choose an action to do (1-6), with the following result of each case:
+
+୨ৎ The first case to Access information including their name, level, stats, daily quest, and BMI.
+
+୨ৎ The second case is to show daily quests so they can level up with each daily quest increasing in difficulty and reps each time the user levels up. You can only do 3 daily quests per day which is randomized and must wait for the next day before trying out new daily quests.
+
+୨ৎ The third case is to do additional quests which is a bit more challenging and you can do each day which is randomized.
+
+୨ৎ The fourth case is to upgrade your weight and if your BMI changes the system will update your BMI too.
+
+୨ৎ The fifth case is to update the day so you can do new daily quests and quests and the system will generate new quests.
+
+୨ৎ The sixth case is to exit the program/the system.
 
 ❤︎ The User can choose which quest to do whether they want to do a daily quest or something else, when finishing the quest the user able to upgrade their stats or level depending on the amount of reps they've inserted (yes since it's c we are limited to individual/manually).
 
