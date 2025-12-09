@@ -3,7 +3,7 @@
 #include <time.h>
 #include <unistd.h>
 
-typedef enum title{
+typedef enum{
 	E,
 	D,
 	C,
@@ -22,14 +22,14 @@ char *titleNames[] = {
     "S",
     "MONARCH"};
     
-enum bmi_category {
+typedef enum{
     UNDERWEIGHT,
     NORMAL_WEIGHT,
     OVERWEIGHT,
     OBESE_1,
     OBESE_2,
     OBESE_3
-};
+}bmi_category;
 float calculateBMI(float height, float weight) {
 	bmi = weight / (height * height);
 }//aya
