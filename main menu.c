@@ -232,7 +232,8 @@ int main(){
 	scanf("%d",&choice);
 	
 	if (choice ==1){
-		
+
+		printStatus(int day,char hunter[],int level,enum title rank,int level,float exp,float maxExp,float bmi,enum bmi_category bmiCat,int day);
 		
 	};
 	
