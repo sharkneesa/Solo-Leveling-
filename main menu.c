@@ -440,6 +440,9 @@ int main() {
     scanf(" %49[^\n]", hunter);
     printf("\nWhat is your age?: ");
     scanf("%d", &age);
+    if(age <14){
+        printf("You're too young");
+    } else if (age <51){
     printf("\nWhat is your weight (kg): ");
     scanf("%f", &weight);
     printf("\nWhat is your height (m): ");
@@ -512,6 +515,8 @@ int main() {
         }
 
     } while (choice != 6);
-
+    } else {
+        printf("you're too old");
+    }
     return 0;
 }
