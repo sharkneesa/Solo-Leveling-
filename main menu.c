@@ -68,7 +68,17 @@ enum bmi_category getBMICategory(float bmi) {
 }// shan
 
 enum title updateRankByLevel(int level, enum title current) {
-	
+	enum title newRank = currentRank;
+
+    if (level >= 30)      newRank = MONARCH;
+    else if (level >= 25) newRank = S;
+    else if (level >= 20) newRank = A;
+    else if (level >= 15) newRank = B;
+    else if (level >= 10) newRank = C;
+    else if (level >= 5)  newRank = D;
+    else                  newRank = E;
+
+    return newRank;
 }//farrel
 
 void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
