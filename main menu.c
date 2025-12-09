@@ -277,17 +277,7 @@ void printStatus(int day,
 	
 };
 
-void showStatus(char hunter[],
-                enum title rank,
-                int level,
-                float exp,
-                float maxExp,
-                float height,
-                float weight,
-                float bmi,
-                enum bmi_category bmiCat,
-                int day) {
-};//varo
+
 
 void attemptMultiQuest(int *level,
                        float *exp,
