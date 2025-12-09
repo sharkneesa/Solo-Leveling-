@@ -45,13 +45,25 @@ char *bmiCategoryNames[] = {
 typedef enum {
     PUSH_UP,
     SQUAT,
-    PLANK
+    PLANK,
+	SWIMMING,
+    CYCLING,
+    CHAIR_SQUAT,
+    WALL_PUSHUP,
+    LUNGES,
+    BICYCLE_CRUNCH
 } WorkoutType;
 
 char *workoutNames[] = {
     "Push-Up",
     "Squat",
-    "Plank"
+    "Plank",
+    "Swimming/Water Aerobics",
+    "Cycling",
+    "Chair Squats",
+    "Wall Push Ups",
+    "Lunges",
+    "Bicycle Crunches"
 };// tolong ditambahkan siapapun, gadiza deh sekalian
 
 typedef struct {
@@ -97,11 +109,57 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
         dailyQuests[0].expReward = 15 + level * 5;
         dailyQuests[0].description = "Push-up ringan untuk massa otot pemula.";
         dailyQuests[0].completed = 0;
-    } else if (bmiCat == NORMAL_WEIGHT) {
-    } else if (bmiCat == OVERWEIGHT) {
-	} else {
+    };
+	else if (bmiCat == NORMAL_WEIGHT) {
+    } ;
+	else if (bmiCat == OVERWEIGHT) {
+	} ;
+	else {
+
+		dailyQuests[0].name = "Swimming/Water Aerobics";
+        dailyQuests[0].type = SWIMMING;
+        dailyQuests[0].targetAmount =  10+ level + rankBonus;
+        dailyQuests[0].expReward = 30 + level * 5;
+        dailyQuests[0].description = "Since water supports your weight, it'll reduce joint strain.";
+        dailyQuests[0].completed = 0;
+
+        dailyQuests[1].name = "Cycling";
+        dailyQuests[1].type = CYCLING;
+        dailyQuests[1].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[1].expReward = 20 + level * 5;
+        dailyQuests[1].description = "Using stationary bikes, this is a great joint friendly workout!";
+        dailyQuests[1].completed = 0;
+        
+        dailyQuests[2].name = "Chair Squats";
+        dailyQuests[2].type = CHAIR_SQUAT;
+        dailyQuests[2].targetAmount = 10 + level + rankBonus; 
+        dailyQuests[2].expReward = 10 + level * 5;
+        dailyQuests[2].description = "Using a chair to support your weight while squats to reduce strain!";
+        dailyQuests[2].completed = 0;
+        
+        dailyQuests[3].name = "Wall Push Ups";
+        dailyQuests[3].type = WALL_PUSHUP;
+        dailyQuests[3].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[3].expReward = 20 + level * 5;
+        dailyQuests[3].description = "A wall to withstand your weight to reduce joint strain!";
+        dailyQuests[3].completed = 0;
+        
+        dailyQuests[4].name = "Lunges";
+        dailyQuests[4].type = LUNGES;
+        dailyQuests[4].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[4].expReward = 10 + level * 5;
+        dailyQuests[4].description = "Low physically heavy exercise to ensure joint free pain!";
+        dailyQuests[4].completed = 0;
+        
+        dailyQuests[5].name = "Bicycle Crunches";
+        dailyQuests[5].type = BICYCLE_CRUNCH;
+        dailyQuests[5].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[5].expReward = 15 + level * 5;
+        dailyQuests[5].description = "Low physical heavy exercise to ensure joint free pain!";
+        dailyQuests[5].completed = 0;
+	};
         // Semua obese sama
-}
+};
 
 void showDailyQuests() {
 	
@@ -114,7 +172,7 @@ void showDailyQuests() {
 	printf("5.[] ");
 	
 	
-}//shan
+};//shan
 
 void printStatus(int day,
 				char hunter[],
