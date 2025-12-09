@@ -31,6 +31,7 @@ enum bmi_category {
     OBESE_3
 };
 float calculateBMI(float height, float weight) {
+	bmi = weight / (height * height);
 }//aya
 
 char *bmiCategoryNames[] = {
