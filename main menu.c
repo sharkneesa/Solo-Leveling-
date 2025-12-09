@@ -76,9 +76,9 @@ typedef struct {
     int expReward;
     const char *description;
     int completed;      // 0 = belum, 1 = sudah
-} Quest;
+}Quest;
 
-bmi_category getBMICategory(float bmi) {
+enum bmi_category getBMICategory(float bmi) {
     if (bmi < 18.5f) return UNDERWEIGHT;
 	else if (bmi < 25.0f) return NORMAL_WEIGHT;
     else if (bmi < 30.0f) return OVERWEIGHT;
@@ -87,7 +87,7 @@ bmi_category getBMICategory(float bmi) {
     else return OBESE_3;    
 };// shan
 
-title updateRankByLevel(int level, enum title current) {
+enum title updateRankByLevel(int level, enum title current) {
 	enum title newRank = currentRank;
 
     if (level >= 30)      newRank = MONARCH;
@@ -133,7 +133,7 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
         dailyQuests[3].expReward = 25 + level * 7; 
         dailyQuests[3].completed = 0;
         dailyQuests[3].description = "High-intensity burpees for explosive stamina";
-    };
+    }
 	else if (bmiCat == NORMAL_WEIGHT) {
         dailyQuests[0].name = "Endurance Run Challenge";
         dailyQuests[0].type = RUNNING;
@@ -275,7 +275,7 @@ void printStatus(int day,
 	printf("RANK          :%f\n ",rank);
 	printf("------------------------------------------\n");
 	
-};
+}
 
 
 
@@ -283,8 +283,57 @@ void attemptMultiQuest(int *level,
                        float *exp,
                        float *maxExp,
                        enum title *rank) {
-                       	
-};//farrel
+    int availableIndex[DAILY_QUEST_COUNT];
+    int count = 0;
+
+    for (int i = 0; i < DAILY_QUEST_COUNT; i++) {
+        if (!dailyQuests[i].completed) {
+            availableIndex[count] = i;
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        printf("\n[System] No more quests available today.\n");
+        return;
+    }
+
+    printf("\n--- AVAILABLE QUESTS ---\n");
+    for (int i = 0; i < count; i++) {
+        int idx = availableIndex[i];
+        printf("%d. %s (Target: %d, Reward: %d EXP)\n",
+               i + 1,
+               dailyQuests[idx].name,
+               dailyQuests[idx].targetAmount,
+               dailyQuests[idx].expReward);
+    }
+	 int choice, amount;
+    printf("Choose quest (1-%d): ", count);
+    scanf("%d", &choice);
+    choice--;
+
+    if (choice < 0 || choice >= count) {
+        printf("Invalid choice!\n");
+        return;
+    }
+
+    int qidx = availableIndex[choice];
+    Quest *q = &dailyQuests[qidx];
+
+    printf("\nYou chose: %s\n", q->name);
+    printf("Enter reps/seconds completed: ");
+    scanf("%d", &amount);
+
+    if (amount >= q->targetAmount) {
+        printf("\nQuest Completed! Gained %d EXP.\n", q->expReward);
+        q->completed = 1;
+        applyExp(q->expReward, level, exp, maxExp, r);
+    } else {
+        printf("\nQuest Failed.\n");
+    }
+
+              	
+}//farrel
 
 void updateWeight(float *weight,
                   float height,
@@ -302,19 +351,45 @@ void updateWeight(float *weight,
 
     printf("\n[System] Weight and BMI updated.\n");
     printf("New BMI: %.2f (%s)\n", *bmi, bmiCategoryNames[*bmiCat]);
-};
-};//farrel
+}//farrel
+
+void applyExp(int gainedExp,
+              int *level,
+              float *exp,
+              float *maxExp,
+              enum title *r) {
+    *exp += gainedExp;
+
+    while (*exp >= *maxExp) {
+        *exp -= *maxExp;
+        (*level)++;
+        *maxExp += 10.0f;
+        printf("Level Up! Now Level %d\n", *level);
+
+        enum title newRank = updateRankByLevel(*level, *r);
+        if (newRank != *r) {
+            *r = newRank;
+            printf("Rank Up! New Rank: %s\n", titleNames[*r]);
+        }
+    }
+}
+
+
 
 int main(){
-	
+	srand((unsigned int)time(NULL));
 	char hunter[50];
-	int age;
-	float weight,height;
-	int level=0;
-	float exp=0;
-	char bmi[50];
-	int choice;
-	int day = 1;
+    int age;
+    float weight, height;
+    int level = 1;
+    float exp = 0.0f;
+    float maxExp = 50.0f;
+    float bmi;
+    enum bmi_category bmiCat;
+    enum title r = E;
+    int choice;
+    int day = 1;
+
 	
 	printf("Hello Hunter Enter Your Name: ");
 	scanf("%49[^\n]", hunter); 
@@ -367,7 +442,7 @@ int main(){
 		printStatus(day, hunter[], level, rank, level, exp, maxExp, bmi, bmiCat, day);
 			break;
 		case 2:
-		attemptDailyQust()
+		attemptDailyQuest()
 		    break;
 		case 3:
 		 attemptMultiQuest(&level, &exp, &maxExp, &rank)
