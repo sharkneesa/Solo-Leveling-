@@ -63,7 +63,7 @@ typedef struct {
     int completed;      // 0 = belum, 1 = sudah
 } Quest;
 
-enum bmi_category getBMICategory(float bmi) {
+bmi_category getBMICategory(float bmi) {
     if (bmi < 18.5f) return UNDERWEIGHT;
 	else if (bmi < 25.0f) return NORMAL_WEIGHT;
     else if (bmi < 30.0f) return OVERWEIGHT;
@@ -72,7 +72,7 @@ enum bmi_category getBMICategory(float bmi) {
     else return OBESE_3;    
 }// shan
 
-enum title updateRankByLevel(int level, enum title current) {
+title updateRankByLevel(int level, enum title current) {
 	enum title newRank = currentRank;
 
     if (level >= 30)      newRank = MONARCH;
