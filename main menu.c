@@ -359,6 +359,9 @@ void attemptMultiQuest(int *level,
     int count = 0;
 
     for (int i = 0; i < currentQuestCount; i++) {
+		if (i == specialQuestIndex){
+    	continue;
+		}
         if (!dailyQuests[i].completed) {
             availableIndex[count] = i;
             count++;
