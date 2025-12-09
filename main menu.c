@@ -314,6 +314,7 @@ int main(){
 	float exp=0;
 	char bmi[50];
 	int choice;
+	int day = 1;
 	
 	printf("Hello Hunter Enter Your Name: ");
 	scanf("%49[^\n]", hunter); 
@@ -342,10 +343,9 @@ int main(){
 	printf("[ USER VERIFIED ]\n\n");
 
 	sleep(3);
+	printf("WELCOME HUNTER %s TO THE SYSTEM!\n",hunter);
 	
 	do{
-	 
-	printf("WELCOME HUNTER %s TO THE SYSTEM!\n",hunter);
 	printf(">>>>>>>>>THIS IS DAY %d<<<<<<<<<\n\n",day);
 	
 	printf("+----------------------------------------------+\n");
@@ -362,30 +362,23 @@ int main(){
 	printf("CHOOSE YOUR ACTION (1-6): ");
 	scanf("%d",&choice);
 	
-	if (choice ==1){
-
-		printStatus(int day,char hunter[],int level,enum title rank,int level,float exp,float maxExp,float bmi,enum bmi_category bmiCat,int day);
-		
-	};
-	
-	printf("[WHAT ACTION WOULD YOU LIKE TO DO?]\n");
-	printf("| 1.HUNTER STATUS                              |\n");
-	printf("| 2.DAILY QUESTS                               |\n");
-	printf("| 3.QUESTS                                     |\n");
-	printf("| 4.UPDATE WEIGHT                              |\n");
-	printf("| 5.CONTINUE TO NEXT DAY                       |\n");
-	printf("| 6.EXIT PROGRAM                               |\n");
-	printf("------------------------------------------------\n");
-	
-	}while(choice!=4);
-	
-
-	
-	
-	
+	switch (choice) {
+		case 1:
+		printStatus(day, hunter[], level, rank, level, exp, maxExp, bmi, bmiCat, day);
+			break;
+		case 2:
+		attemptDailyQust()
+		    break;
+		case 3:
+		 attemptMultiQuest(&level, &exp, &maxExp, &rank)
+		    break;
+		case 4: 
+		updateWeight(&weight, height, &bmi, &bmiCat, level, rank)
+		case 5: day++;
+        generateDailyQuests(level, bmiCat, rank);
+        printf("\n[System] Day advanced to %d. New quest generated.\n", day);
+        break;	
+	}
+	}while(choice!=6);
 	return 0;
-	
-	
-	
-	
 }
