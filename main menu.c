@@ -69,7 +69,7 @@ typedef struct {
     int completed;      // 0 = belum, 1 = sudah
 } Quest;
 
-ENUM {MAX_DAILY_QUESTS = 6}
+ENUM {MAX_DAILY_QUESTS = 6};
 Quest dailyQuests[MAX_DAILY_QUESTS];
 int currentQuestCount = 0;
 int specialQuestIndex = 0;   // index daily quest (1 quest per hari)
