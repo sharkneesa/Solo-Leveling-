@@ -1,4 +1,4 @@
-#include <stdio.h>
+	#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -151,6 +151,17 @@ void updateWeight(float *weight,
                   enum bmi_category *bmiCat,
                   int level,
                   enum title rank) {
+	printf("Enter your new weight (kg): ");
+    scanf("%f", weight);
+
+    *bmi = calculateBMI(height, *weight);
+    *bmiCat = getBMICategory(*bmi);
+
+    generateDailyQuests(level, *bmiCat, rank);
+
+    printf("\n[System] Weight and BMI updated.\n");
+    printf("New BMI: %.2f (%s)\n", *bmi, bmiCategoryNames[*bmiCat]);
+}
 }//farrel
 
 int main(){
