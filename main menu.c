@@ -307,7 +307,7 @@ int main(){
 	printf("| 4.UPDATE WEIGHT                              |\n");
 	printf("| 5.CONTINUE TO NEXT DAY                       |\n");
 	printf("| 6.EXIT PROGRAM                               |\n");
-	printf("------------------------------------------\n");
+	printf("------------------------------------------------\n");
 	
 	}while(choice!=4);
 	
