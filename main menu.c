@@ -85,7 +85,7 @@ bmi_category getBMICategory(float bmi) {
     else if (bmi < 35.0f) return OBESE_1;
     else if (bmi < 40.0f) return OBESE_2;
     else return OBESE_3;    
-}// shan
+};// shan
 
 title updateRankByLevel(int level, enum title current) {
 	enum title newRank = currentRank;
@@ -99,7 +99,7 @@ title updateRankByLevel(int level, enum title current) {
     else                  newRank = E;
 
     return newRank;
-}//farrel
+};//farrel
 
 void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
     int rankIndex = (int)rank;      // E=0, D=1, C=2, ...
@@ -133,7 +133,8 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
         dailyQuests[3].expReward = 25 + level * 7; 
         dailyQuests[3].completed = 0;
         dailyQuests[3].description = "High-intensity burpees for explosive stamina";
-    } else if (bmiCat == NORMAL_WEIGHT) {
+    };
+	else if (bmiCat == NORMAL_WEIGHT) {
         dailyQuests[0].name = "Endurance Run Challenge";
         dailyQuests[0].type = RUNNING;
         dailyQuests[0].targetAmount = 10 + level + rankBonus; // minutes
@@ -161,7 +162,8 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
         dailyQuests[3].expReward = 25 + level * 7; 
         dailyQuests[3].completed = 0;
         dailyQuests[3].description = "Focus on core to build up full-range lunges";
-    } else if (bmiCat == OVERWEIGHT) {
+    };
+	else if (bmiCat == OVERWEIGHT) {
         dailyQuests[0].name = "Moderate Push-Ups";
         dailyQuests[0].type = PUSH_UP; 
         dailyQuests[0].targetAmount = 10 + level + rankBonus;
@@ -189,7 +191,7 @@ void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
         dailyQuests[3].expReward = 25 + level * 7; 
         dailyQuests[3].completed = 0;
         dailyQuests[3].description = "Blend endurance, speed, and stamina, for core stability";
-	} // gadiza
+	}; // gadiza
 	else {
 
 		dailyQuests[0].name = "Swimming/Water Aerobics";
@@ -292,7 +294,7 @@ void attemptMultiQuest(int *level,
                        float *maxExp,
                        enum title *rank) {
                        	
-}//farrel
+};//farrel
 
 void updateWeight(float *weight,
                   float height,
@@ -310,8 +312,8 @@ void updateWeight(float *weight,
 
     printf("\n[System] Weight and BMI updated.\n");
     printf("New BMI: %.2f (%s)\n", *bmi, bmiCategoryNames[*bmiCat]);
-}
-}//farrel
+};
+};//farrel
 
 int main(){
 	
