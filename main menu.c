@@ -3,36 +3,23 @@
 #include <time.h>
 #include <unistd.h>
 
-typedef enum{
-	E,
-	D,
-	C,
-	B,
-	A,
-	S,
-	MONARCH
-}rank;
+
+typedef enum {
+    E, D, C, B, A, S, MONARCH
+} rank;
 
 char *titleNames[] = {
-    "E",
-    "D",
-    "C",
-    "B",
-    "A",
-    "S",
-    "MONARCH"};
-    
-typedef enum{
+    "E","D","C","B","A","S","MONARCH"
+};
+
+typedef enum {
     UNDERWEIGHT,
     NORMAL_WEIGHT,
     OVERWEIGHT,
     OBESE_1,
     OBESE_2,
     OBESE_3
-}bmi_category;
-float calculateBMI(float height, float weight) {
-	bmi = weight / (height * height);
-}//aya
+} bmi_category;
 
 char *bmiCategoryNames[] = {
     "Underweight",
@@ -42,11 +29,12 @@ char *bmiCategoryNames[] = {
     "Obese (Type 2)",
     "Obese (Type 3)"
 };
+
 typedef enum {
     PUSH_UP,
     SQUAT,
     PLANK,
-	SWIMMING,
+    SWIMMING,
     CYCLING,
     CHAIR_SQUAT,
     WALL_PUSHUP,
@@ -66,29 +54,44 @@ char *workoutNames[] = {
     "Chair Squats",
     "Wall Push Ups",
     "Lunges",
-    "Bicycle Crunches"
-};// tolong ditambahkan siapapun, gadiza deh sekalian
+    "Bicycle Crunches",
+    "Jogging",
+    "Walk",
+    "Burpee"
+};
 
 typedef struct {
     const char *name;
     WorkoutType type;
-    int targetAmount;   // reps atau detik
+    int targetAmount;   // reps / detik / menit
     int expReward;
     const char *description;
     int completed;      // 0 = belum, 1 = sudah
-}Quest;
+} Quest;
 
-enum bmi_category getBMICategory(float bmi) {
+
+Quest dailyQuests[3];
+int currentQuestCount = 0;
+int specialQuestIndex = 0;   // index daily quest (1 quest per hari)
+int specialQuestDone = 0;    // 1 kalau daily quest sudah selesai
+
+
+
+float calculateBMI(float height, float weight) {
+    return weight / (height * height);
+}
+
+bmi_category getBMICategory(float bmi) {
     if (bmi < 18.5f) return UNDERWEIGHT;
-	else if (bmi < 25.0f) return NORMAL_WEIGHT;
+    else if (bmi < 25.0f) return NORMAL_WEIGHT;
     else if (bmi < 30.0f) return OVERWEIGHT;
     else if (bmi < 35.0f) return OBESE_1;
     else if (bmi < 40.0f) return OBESE_2;
-    else return OBESE_3;    
-};// shan
+    else return OBESE_3;
+}
 
-enum title updateRankByLevel(int level, enum title current) {
-	enum title newRank = currentRank;
+rank updateRankByLevel(int level, rank current) {
+    rank newRank = current;
 
     if (level >= 30)      newRank = MONARCH;
     else if (level >= 25) newRank = S;
@@ -99,182 +102,241 @@ enum title updateRankByLevel(int level, enum title current) {
     else                  newRank = E;
 
     return newRank;
-};//farrel
+}
 
-void generateDailyQuests(int level, enum bmi_category bmiCat, enum title rank) {
-    int rankIndex = (int)rank;      // E=0, D=1, C=2, ...
-    int rankBonus = rankIndex * 2;  // tiap naik rank +2 reps/detik
+void applyExp(int gainedExp,
+              int *level,
+              float *exp,
+              float *maxExp,
+              rank *r) {
+
+    *exp += gainedExp;
+
+    while (*exp >= *maxExp) {
+        *exp -= *maxExp;
+        (*level)++;
+        *maxExp += 10.0f;
+        printf("Level Up! Now Level %d\n", *level);
+
+        rank newRank = updateRankByLevel(*level, *r);
+        if (newRank != *r) {
+            *r = newRank;
+            printf("Rank Up! New Rank: %s\n", titleNames[*r]);
+        }
+    }
+}
+
+
+
+void generateDailyQuests(int level, bmi_category bmiCat, rank r) {
+    int rankIndex = (int)r;      // E=0, D=1, ...
+    int rankBonus = rankIndex * 2;
 
     if (bmiCat == UNDERWEIGHT) {
-    	dailyQuests[0].name = "Lower Body Mass Builder";
+        currentQuestCount = 4;
+
+        dailyQuests[0].name = "Lower Body Mass Builder";
         dailyQuests[0].type = SQUAT;
-        dailyQuests[0].targetAmount = 15 + level + rankBonus; 
-        dailyQuests[0].expReward = 15 + level * 5; 
-        dailyQuests[0].completed = 0; 
+        dailyQuests[0].targetAmount = 15 + level + rankBonus;
+        dailyQuests[0].expReward = 15 + level * 5;
+        dailyQuests[0].completed = 0;
         dailyQuests[0].description = "Focused squats to increase lower body muscle mass.";
 
         dailyQuests[1].name = "Effective Cycling Workout";
         dailyQuests[1].type = CYCLING;
-        dailyQuests[1].targetAmount = 30 + level * 5 + rankBonus; // minutes
-        dailyQuests[1].expReward = 10 + level * 4; 
+        dailyQuests[1].targetAmount = 30 + level * 5 + rankBonus;
+        dailyQuests[1].expReward = 10 + level * 4;
         dailyQuests[1].completed = 0;
         dailyQuests[1].description = "Blend endurance, speed, and stamina, for core stability.";
 
         dailyQuests[2].name = "Cardio Session";
         dailyQuests[2].type = JOGGING;
-        dailyQuests[2].targetAmount = 30 + level * 5 + rankBonus; // minutes
-        dailyQuests[2].expReward = 25 + level * 7; 
+        dailyQuests[2].targetAmount = 30 + level * 5 + rankBonus;
+        dailyQuests[2].expReward = 25 + level * 7;
         dailyQuests[2].completed = 0;
         dailyQuests[2].description = "Moderate to intense long jogs.";
 
         dailyQuests[3].name = "Daily Supplemental Movement";
         dailyQuests[3].type = BURPEE;
-        dailyQuests[3].targetAmount = 15 + level * 5 + rankBonus; // how maby times
-        dailyQuests[3].expReward = 25 + level * 7; 
+        dailyQuests[3].targetAmount = 15 + level * 5 + rankBonus;
+        dailyQuests[3].expReward = 25 + level * 7;
         dailyQuests[3].completed = 0;
-        dailyQuests[3].description = "High-intensity burpees for explosive stamina";
+        dailyQuests[3].description = "High-intensity burpees for explosive stamina.";
     }
-	else if (bmiCat == NORMAL_WEIGHT) {
+    else if (bmiCat == NORMAL_WEIGHT) {
+        currentQuestCount = 4;
+
         dailyQuests[0].name = "Endurance Run Challenge";
-        dailyQuests[0].type = RUNNING;
-        dailyQuests[0].targetAmount = 10 + level + rankBonus; // minutes
-        dailyQuests[0].expReward = 15 + level * 5; 
-        dailyQuests[0].completed = 0; 
+        dailyQuests[0].type = JOGGING;
+        dailyQuests[0].targetAmount = 10 + level + rankBonus;
+        dailyQuests[0].expReward = 15 + level * 5;
+        dailyQuests[0].completed = 0;
         dailyQuests[0].description = "Test your stamina with a standard endurance run.";
 
         dailyQuests[1].name = "Core Endurance Hold";
         dailyQuests[1].type = PLANK;
-        dailyQuests[1].targetAmount = 75 + level * 5 + rankBonus; // seconds
-        dailyQuests[1].expReward = 10 + level * 4; 
+        dailyQuests[1].targetAmount = 75 + level * 5 + rankBonus;
+        dailyQuests[1].expReward = 10 + level * 4;
         dailyQuests[1].completed = 0;
         dailyQuests[1].description = "Standard core hold to increase endurance.";
 
         dailyQuests[2].name = "Daily Supplemental Movement";
-        dailyQuests[2].type = BURPEE; // higher intensity for fitter category
-        dailyQuests[2].targetAmount = 20 + level * 5 + rankBonus; // how many times
-        dailyQuests[2].expReward = 25 + level * 7; 
+        dailyQuests[2].type = BURPEE;
+        dailyQuests[2].targetAmount = 20 + level * 5 + rankBonus;
+        dailyQuests[2].expReward = 25 + level * 7;
         dailyQuests[2].completed = 0;
         dailyQuests[2].description = "High-intensity burpees for explosive stamina.";
 
         dailyQuests[3].name = "Supported Lunges (Holding a chair/wall)";
         dailyQuests[3].type = LUNGE;
-        dailyQuests[3].targetAmount = 30 + level * 5 + rankBonus; // 
-        dailyQuests[3].expReward = 25 + level * 7; 
+        dailyQuests[3].targetAmount = 30 + level * 5 + rankBonus;
+        dailyQuests[3].expReward = 25 + level * 7;
         dailyQuests[3].completed = 0;
         dailyQuests[3].description = "Focus on core to build up full-range lunges";
-    };
-	else if (bmiCat == OVERWEIGHT) {
+    }
+    else if (bmiCat == OVERWEIGHT) {
+        currentQuestCount = 4;
+
         dailyQuests[0].name = "Moderate Push-Ups";
-        dailyQuests[0].type = PUSH_UP; 
+        dailyQuests[0].type = PUSH_UP;
         dailyQuests[0].targetAmount = 10 + level + rankBonus;
-        dailyQuests[0].expReward = 15 + level * 5; 
+        dailyQuests[0].expReward = 15 + level * 5;
         dailyQuests[0].description = "Moderate push-ups to build supporting strength.";
         dailyQuests[0].completed = 0;
 
         dailyQuests[1].name = "Low-Joint Exercise";
         dailyQuests[1].type = LUNGE;
-        dailyQuests[1].targetAmount = 30 + level * 5 + rankBonus; // how many times
-        dailyQuests[1].expReward = 10 + level * 4; 
+        dailyQuests[1].targetAmount = 30 + level * 5 + rankBonus;
+        dailyQuests[1].expReward = 10 + level * 4;
         dailyQuests[1].description = "Focus on core to build up full-range lunges.";
         dailyQuests[1].completed = 0;
 
         dailyQuests[2].name = "Freestyle Swimming";
         dailyQuests[2].type = SWIMMING;
-        dailyQuests[2].targetAmount = 10 + level * 5 + rankBonus; // laps
-        dailyQuests[2].expReward = 25 + level * 7; 
-        dailyQuests[2].description = "Ideal calorie burn.";
+        dailyQuests[2].targetAmount = 10 + level * 5 + rankBonus;
+        dailyQuests[2].expReward = 25 + level * 7;
+        dailyQuests[2].description = "Ideal calorie burn.";
         dailyQuests[2].completed = 0;
 
         dailyQuests[3].name = "Effective Cycling Workout";
         dailyQuests[3].type = CYCLING;
-        dailyQuests[3].targetAmount = 30 + level * 5 + rankBonus; // minutes
-        dailyQuests[3].expReward = 25 + level * 7; 
-        dailyQuests[3].completed = 0;
+        dailyQuests[3].targetAmount = 30 + level * 5 + rankBonus;
+        dailyQuests[3].expReward = 25 + level * 7;
         dailyQuests[3].description = "Blend endurance, speed, and stamina, for core stability";
-	}; // gadiza
-	else {
+        dailyQuests[3].completed = 0;
+    }
+    else { // semua obese
+        currentQuestCount = 6;
 
-		dailyQuests[0].name = "Swimming/Water Aerobics";
+        dailyQuests[0].name = "Swimming/Water Aerobics";
         dailyQuests[0].type = SWIMMING;
-        dailyQuests[0].targetAmount =  10+ level + rankBonus;
+        dailyQuests[0].targetAmount = 10 + level + rankBonus;
         dailyQuests[0].expReward = 30 + level * 5;
         dailyQuests[0].description = "Since water supports your weight, it'll reduce joint strain.";
         dailyQuests[0].completed = 0;
 
         dailyQuests[1].name = "Cycling";
         dailyQuests[1].type = CYCLING;
-        dailyQuests[1].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[1].targetAmount = 15 + level + rankBonus;
         dailyQuests[1].expReward = 20 + level * 5;
         dailyQuests[1].description = "Using stationary bikes, this is a great joint friendly workout!";
         dailyQuests[1].completed = 0;
-        
+
         dailyQuests[2].name = "Chair Squats";
         dailyQuests[2].type = CHAIR_SQUAT;
-        dailyQuests[2].targetAmount = 10 + level + rankBonus; 
+        dailyQuests[2].targetAmount = 10 + level + rankBonus;
         dailyQuests[2].expReward = 10 + level * 5;
         dailyQuests[2].description = "Using a chair to support your weight while squats to reduce strain!";
         dailyQuests[2].completed = 0;
-        
+
         dailyQuests[3].name = "Wall Push Ups";
         dailyQuests[3].type = WALL_PUSHUP;
-        dailyQuests[3].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[3].targetAmount = 15 + level + rankBonus;
         dailyQuests[3].expReward = 20 + level * 5;
         dailyQuests[3].description = "A wall to withstand your weight to reduce joint strain!";
         dailyQuests[3].completed = 0;
-        
+
         dailyQuests[4].name = "Lunges";
         dailyQuests[4].type = LUNGE;
-        dailyQuests[4].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[4].targetAmount = 15 + level + rankBonus;
         dailyQuests[4].expReward = 10 + level * 5;
         dailyQuests[4].description = "Low physically heavy exercise to ensure joint free pain!";
         dailyQuests[4].completed = 0;
-        
+
         dailyQuests[5].name = "Bicycle Crunches";
         dailyQuests[5].type = BICYCLE_CRUNCH;
-        dailyQuests[5].targetAmount = 15 + level + rankBonus; 
+        dailyQuests[5].targetAmount = 15 + level + rankBonus;
         dailyQuests[5].expReward = 15 + level * 5;
         dailyQuests[5].description = "Low physical heavy exercise to ensure joint free pain!";
         dailyQuests[5].completed = 0;
-	};
-        // Semua obese sama
-};
+    }
 
-void showDailyQuests() {
-	
-	printf("DAILY QUEST-TRAIN TO BECOME A FORMIDABLE COMBATANT\n");
-	printf("-----------------------GOALS-----------------------\n\n");
-	printf("1.[] ");
-	printf("2.[] ");
-	printf("3.[] ");
-	printf("4.[] ");
-	printf("5.[] ");
-	
-	
-};//shan
+    if (currentQuestCount > 0) {
+        specialQuestIndex = rand() % currentQuestCount;  // satu daily quest random
+    } else {
+        specialQuestIndex = 0;
+    }
+    specialQuestDone = 0;
+}
+
 
 void printStatus(int day,
-				char hunter[],
-				int level,
-                enum title rank,
-                int level,
-                float exp,
-                float maxExp,
-                float bmi,
-                enum bmi_category bmiCat,
-                int day){
-	
-	printf("==========================================\n");
-	printf("              HUNTER STATUS\n");
-	printf("==========================================\n");
-	printf("DAY           :%s\n",day);
-	printf("NAME          :%s\n",hunter);
-	printf("LEVEL         :%f\n ",level);
-	printf("EXP           :%d/%d\n ",exp,maxExp);
-	printf("BMI           :%f\n ",bmi);
-	printf("BMI CATEGORY  :%f\n ",bmiCat)
-	printf("RANK          :%f\n ",rank);
-	printf("------------------------------------------\n");
-	
+                 char hunter[],
+                 int level,
+                 rank r,
+                 float exp,
+                 float maxExp,
+                 float bmi,
+                 bmi_category bmiCat) {
+
+    printf("==========================================\n");
+    printf("              HUNTER STATUS\n");
+    printf("==========================================\n");
+    printf("DAY           : %d\n", day);
+    printf("NAME          : %s\n", hunter);
+    printf("LEVEL         : %d\n", level);
+    printf("EXP           : %.2f/%.2f\n", exp, maxExp);
+    printf("BMI           : %.2f\n", bmi);
+    printf("BMI CATEGORY  : %s\n", bmiCategoryNames[bmiCat]);
+    printf("RANK          : %s\n", titleNames[r]);
+    printf("------------------------------------------\n");
+}
+
+
+
+void attemptDailyQuest(int *level,
+                       float *exp,
+                       float *maxExp,
+                       rank *r) {
+
+    printf("DAILY QUEST - TRAIN TO BECOME A FORMIDABLE COMBATANT\n");
+    printf("-----------------------GOAL------------------------\n\n");
+
+    if (specialQuestDone || dailyQuests[specialQuestIndex].completed) {
+        printf("[System] Daily quest for today is already completed.\n");
+        return;
+    }
+
+    Quest *q = &dailyQuests[specialQuestIndex];
+    int amount;
+
+    printf("Today's Daily Quest:\n");
+    printf("Name   : %s\n", q->name);
+    printf("Type   : %s\n", workoutNames[q->type]);
+    printf("Target : %d\n", q->targetAmount);
+    printf("Reward : %d EXP\n", q->expReward);
+    printf("Desc   : %s\n", q->description);
+
+    printf("\nEnter reps/seconds completed: ");
+    scanf("%d", &amount);
+    if (amount >= q->targetAmount) {
+        printf("\nDaily Quest Completed! Gained %d EXP.\n", q->expReward);
+        q->completed = 1;
+        specialQuestDone = 1;
+        applyExp(q->expReward, level, exp, maxExp, r);
+    } else {
+        printf("\nDaily Quest Failed.\n");
+    }
 }
 
 
@@ -282,11 +344,12 @@ void printStatus(int day,
 void attemptMultiQuest(int *level,
                        float *exp,
                        float *maxExp,
-                       enum title *rank) {
-    int availableIndex[DAILY_QUEST_COUNT];
+                       rank *r) {
+
+    int availableIndex[3];
     int count = 0;
 
-    for (int i = 0; i < DAILY_QUEST_COUNT; i++) {
+    for (int i = 0; i < currentQuestCount; i++) {
         if (!dailyQuests[i].completed) {
             availableIndex[count] = i;
             count++;
@@ -307,7 +370,8 @@ void attemptMultiQuest(int *level,
                dailyQuests[idx].targetAmount,
                dailyQuests[idx].expReward);
     }
-	 int choice, amount;
+
+    int choice, amount;
     printf("Choose quest (1-%d): ", count);
     scanf("%d", &choice);
     choice--;
@@ -331,129 +395,122 @@ void attemptMultiQuest(int *level,
     } else {
         printf("\nQuest Failed.\n");
     }
+}
 
-              	
-}//farrel
+
 
 void updateWeight(float *weight,
                   float height,
                   float *bmi,
-                  enum bmi_category *bmiCat,
+                  bmi_category *bmiCat,
                   int level,
-                  enum title rank) {
-	printf("Enter your new weight (kg): ");
+                  rank r) {
+
+    printf("Enter your new weight (kg): ");
     scanf("%f", weight);
 
     *bmi = calculateBMI(height, *weight);
     *bmiCat = getBMICategory(*bmi);
 
-    generateDailyQuests(level, *bmiCat, rank);
+    generateDailyQuests(level, *bmiCat, r);
 
     printf("\n[System] Weight and BMI updated.\n");
     printf("New BMI: %.2f (%s)\n", *bmi, bmiCategoryNames[*bmiCat]);
-}//farrel
-
-void applyExp(int gainedExp,
-              int *level,
-              float *exp,
-              float *maxExp,
-              enum title *r) {
-    *exp += gainedExp;
-
-    while (*exp >= *maxExp) {
-        *exp -= *maxExp;
-        (*level)++;
-        *maxExp += 10.0f;
-        printf("Level Up! Now Level %d\n", *level);
-
-        enum title newRank = updateRankByLevel(*level, *r);
-        if (newRank != *r) {
-            *r = newRank;
-            printf("Rank Up! New Rank: %s\n", titleNames[*r]);
-        }
-    }
 }
 
 
 
-int main(){
-	srand((unsigned int)time(NULL));
-	char hunter[50];
+int main() {
+    srand((unsigned int)time(NULL));
+
+    char hunter[50];
     int age;
     float weight, height;
     int level = 1;
     float exp = 0.0f;
     float maxExp = 50.0f;
     float bmi;
-    enum bmi_category bmiCat;
-    enum title r = E;
+    bmi_category bmiCat;
+    rank r = E;
     int choice;
     int day = 1;
 
-	
-	printf("Hello Hunter Enter Your Name: ");
-	scanf("%49[^\n]", hunter); 
-	printf("\nWhat is your age?: ");
-	scanf("%d",&age);
-	printf("\nWhat is your weight: ");
-	scanf("%f",&weight);
-	printf("\nWhat is your height: ");
-	scanf("%f",&height);
-	printf("\n[ READING HUNTER DATA ]\n\n");
-	sleep(2);
-		
-	printf("[>         ] 10%\n");
-	sleep(1);
-	printf("[==>       ] 30%\n");
-	sleep(1);
-	printf("[====>     ] 50%\n");
-	sleep(1);
-	printf("[======>   ] 70%\n");
-	sleep(1);
-	printf("[========> ] 90%\n");
-	sleep(1);
-	printf("[==========] 100%\n");
-	sleep(2);
-	printf(">>> SYSTEM MESSAGE <<<\n");
-	printf("[ USER VERIFIED ]\n\n");
+    printf("Hello Hunter Enter Your Name: ");
+    scanf(" %49[^\n]", hunter);
+    printf("\nWhat is your age?: ");
+    scanf("%d", &age);
+    printf("\nWhat is your weight (kg): ");
+    scanf("%f", &weight);
+    printf("\nWhat is your height (m): ");
+    scanf("%f", &height);
+    printf("\n[ READING HUNTER DATA ]\n\n");
+    sleep(2);
 
-	sleep(3);
-	printf("WELCOME HUNTER %s TO THE SYSTEM!\n",hunter);
-	
-	do{
-	printf(">>>>>>>>>THIS IS DAY %d<<<<<<<<<\n\n",day);
-	
-	printf("+----------------------------------------------+\n");
-	printf("|                      MENU                    |\n");
-	printf("+----------------------------------------------+\n");
-	printf("| 1.HUNTER STATUS                              |\n");
-	printf("| 2.DAILY QUESTS                               |\n");
-	printf("| 3.QUESTS                                     |\n");
-	printf("| 4.UPDATE WEIGHT                              |\n");
-	printf("| 5.CONTINUE TO NEXT DAY                       |\n");
-	printf("| 6.EXIT PROGRAM                               |\n");
-	printf("+----------------------------------------------+\n");
-	printf("\n");
-	printf("CHOOSE YOUR ACTION (1-6): ");
-	scanf("%d",&choice);
-	
-	switch (choice) {
-		case 1:
-		printStatus(day, hunter[], level, rank, level, exp, maxExp, bmi, bmiCat, day);
-			break;
-		case 2:
-		attemptDailyQuest()
-		    break;
-		case 3:
-		 attemptMultiQuest(&level, &exp, &maxExp, &rank)
-		    break;
-		case 4: 
-		updateWeight(&weight, height, &bmi, &bmiCat, level, rank)
-		case 5: day++;
-        generateDailyQuests(level, bmiCat, rank);
-        printf("\n[System] Day advanced to %d. New quest generated.\n", day);
-        break;	
-	}
-	}while(choice!=6);
-	return 0;
+    printf("[>         ] 10%%\n");
+    sleep(1);
+    printf("[==>       ] 30%%\n");
+    sleep(1);
+    printf("[====>     ] 50%%\n");
+    sleep(1);
+    printf("[======>   ] 70%%\n");
+    sleep(1);
+    printf("[========> ] 90%%\n");
+    sleep(1);
+    printf("[==========] 100%%\n");
+    sleep(2);
+    printf(">>> SYSTEM MESSAGE <<<\n");
+    printf("[ USER VERIFIED ]\n\n");
+
+    sleep(3);
+    printf("WELCOME HUNTER %s TO THE SYSTEM!\n", hunter);
+
+    bmi = calculateBMI(height, weight);
+    bmiCat = getBMICategory(bmi);
+    generateDailyQuests(level, bmiCat, r);
+
+    do {
+        printf(">>>>>>>>>THIS IS DAY %d<<<<<<<<<\n\n", day);
+
+        printf("+----------------------------------------------+\n");
+        printf("|                      MENU                    |\n");
+        printf("+----------------------------------------------+\n");
+        printf("| 1.HUNTER STATUS                              |\n");
+        printf("| 2.DAILY QUESTS                               |\n");
+        printf("| 3.QUESTS                                     |\n");
+        printf("| 4.UPDATE WEIGHT                              |\n");
+        printf("| 5.CONTINUE TO NEXT DAY                       |\n");
+        printf("| 6.EXIT PROGRAM                               |\n");
+        printf("+----------------------------------------------+\n");
+        printf("\n");
+        printf("CHOOSE YOUR ACTION (1-6): ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printStatus(day, hunter, level, r, exp, maxExp, bmi, bmiCat);
+                break;
+            case 2:
+                attemptDailyQuest(&level, &exp, &maxExp, &r);
+                break;
+            case 3:
+                attemptMultiQuest(&level, &exp, &maxExp, &r);
+                break;
+            case 4:
+                updateWeight(&weight, height, &bmi, &bmiCat, level, r);
+                break;
+            case 5:
+                day++;
+                generateDailyQuests(level, bmiCat, r);
+                printf("\n[System] Day advanced to %d. New quest generated.\n", day);
+                break;
+            case 6:
+                printf("\n[System] Exiting program. Goodbye, Hunter %s!\n", hunter);
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+
+    } while (choice != 6);
+
+    return 0;
 }
