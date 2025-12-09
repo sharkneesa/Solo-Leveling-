@@ -311,6 +311,14 @@ void attemptDailyQuest(int *level,
                        float *maxExp,
                        rank *r) {
 
+    sleep(1);
+	
+	printf("[ SYSTEM GENERATING DAILY QUESTS ]\n\n");
+	sleep (1);
+	
+	print("INITIALIZING...\n\n");
+	sleep(2);
+
     printf("DAILY QUEST - TRAIN TO BECOME A FORMIDABLE COMBATANT\n");
     printf("-----------------------GOAL------------------------\n\n");
 
