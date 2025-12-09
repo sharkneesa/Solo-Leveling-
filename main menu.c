@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 
+
 typedef enum {
     E, D, C, B, A, S, MONARCH
 } rank;
@@ -69,7 +70,8 @@ typedef struct {
     int completed;      // 0 = belum, 1 = sudah
 } Quest;
 
-ENUM {MAX_DAILY_QUESTS = 6};
+enum { MAX_DAILY_QUESTS = 6 };
+
 Quest dailyQuests[MAX_DAILY_QUESTS];
 int currentQuestCount = 0;
 int specialQuestIndex = 0;   // index daily quest (1 quest per hari)
@@ -125,7 +127,6 @@ void applyExp(int gainedExp,
         }
     }
 }
-
 
 
 void generateDailyQuests(int level, bmi_category bmiCat, rank r) {
@@ -280,6 +281,7 @@ void generateDailyQuests(int level, bmi_category bmiCat, rank r) {
 }
 
 
+
 void printStatus(int day,
                  char hunter[],
                  int level,
@@ -302,7 +304,7 @@ void printStatus(int day,
     printf("------------------------------------------\n");
 }
 
-
+// --------- DAILY QUEST (1 RANDOM) ---------
 
 void attemptDailyQuest(int *level,
                        float *exp,
@@ -340,13 +342,12 @@ void attemptDailyQuest(int *level,
 }
 
 
-
 void attemptMultiQuest(int *level,
                        float *exp,
                        float *maxExp,
                        rank *r) {
 
-    int availableIndex[3];
+    int availableIndex[MAX_DAILY_QUESTS];
     int count = 0;
 
     for (int i = 0; i < currentQuestCount; i++) {
